@@ -26,6 +26,7 @@ export const Signup = () => {
       console.log("Signup success:", userCredential.user.uid);
       navigate("/");
     } catch (error) {
+      alert('Something went wrong');
       console.log("🚀 ~ handleSignup ~ error:", error);
     }
   };
@@ -36,6 +37,7 @@ export const Signup = () => {
       localStorage.setItem("user", userCredential.user.uid);
       navigate("/");
     } catch (error) {
+      alert(error);
       console.log("🚀 ~ handleGoogleSignIn ~ error:", error);
     }
   };

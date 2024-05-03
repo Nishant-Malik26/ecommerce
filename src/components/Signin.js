@@ -20,6 +20,8 @@ export const Signin = () => {
       localStorage.setItem("user", userCredential.user.uid);
       navigate("/");
     } catch (error) {
+      alert('Email or password is wrong');
+
       console.log("🚀 ~ handleSignin ~ error:", error);
     }
   };
@@ -32,6 +34,8 @@ export const Signin = () => {
       localStorage.setItem("user", userCredential.user.uid);
       navigate("/");
     } catch (error) {
+      alert('Something went wrong');
+
       console.log("🚀 ~ handleGoogleSignIn ~ error:", error);
     }
   };

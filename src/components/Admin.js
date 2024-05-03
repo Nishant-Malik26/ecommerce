@@ -52,12 +52,13 @@ const AdminPanel = ({ user }) => {
       setNewProductDescription("");
       getAllProducts();
     } catch (error) {
+      alert('Unable to add product');
+
       console.log("🚀 ~ handleAddProduct ~ error:", error);
     }
   };
 
   const handleEditProduct = async (productId, newName, newDescription) => {
-
     try {
       //Editing Product
       await setDoc(doc(db, "products", productId), {
@@ -69,6 +70,8 @@ const AdminPanel = ({ user }) => {
       setEditingProductId(null);
       getAllProducts();
     } catch (error) {
+      alert('Unable to edit product');
+
       console.log("🚀 ~ handleEditProduct ~ error:", error);
     }
   };
@@ -82,6 +85,8 @@ const AdminPanel = ({ user }) => {
       setEditingProductId(null);
       getAllProducts();
     } catch (error) {
+      alert('Unable to delete product');
+
       console.error("Error editing product: ", error);
     }
   };
@@ -89,8 +94,8 @@ const AdminPanel = ({ user }) => {
     // initially loading
     return <div>Loading...</div>;
   }
-// Showing text to sign in to use this route
-//basic form is there 
+  // Showing text to sign in to use this route
+  //basic form is there
   return (
     <>
       {localStorage.getItem("user") ? (
@@ -121,65 +126,71 @@ const AdminPanel = ({ user }) => {
             </form>
             <h2 className="text-xl font-bold mb-4">Products</h2>
             <ul>
-              {products.map((product) => (
-                <li key={product.id} className="border rounded-md p-4 mb-4">
-                  {editingProductId === product.id ? (
-                    <>
-                      <input
-                        type="text"
-                        value={productName}
-                        onChange={(e) => setProductName(e.target.value)}
-                        className="w-full border rounded-md px-4 py-2 mb-2"
-                      />
-                      <input
-                        type="text"
-                        value={productDescription}
-                        onChange={(e) => setProductDescription(e.target.value)}
-                        className="w-full border rounded-md px-4 py-2 mb-2"
-                      />
-                      <button
-                        onClick={() =>
-                          handleEditProduct(
-                            product.id,
-                            productName,
-                            productDescription
-                          )
-                        }
-                        className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2"
-                      >
-                        Save
-                      </button>
-                      <button
-                        onClick={() => setEditingProductId(null)}
-                        className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded"
-                      >
-                        Cancel
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <div className="mb-2">{product.name}</div>
-                      <div className="mb-2">{product.description}</div>
-                      <button
-                        onClick={() => {
-                          setEditingProductId(product.id);
-                          setProductName(product.name);
-                          setProductDescription(product.description);
-                        }}
-                        className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded mr-2"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDeleteProduct(product.id)}
-                        className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-                      >
-                        Delete
-                      </button>
-                    </>
-                  )}
-                </li>
-              ))}
+              {products.length > 0 ? (
+                products.map((product) => (
+                  <li key={product.id} className="border rounded-md p-4 mb-4">
+                    {editingProductId === product.id ? (
+                      <>
+                        <input
+                          type="text"
+                          value={productName}
+                          onChange={(e) => setProductName(e.target.value)}
+                          className="w-full border rounded-md px-4 py-2 mb-2"
+                        />
+                        <input
+                          type="text"
+                          value={productDescription}
+                          onChange={(e) =>
+                            setProductDescription(e.target.value)
+                          }
+                          className="w-full border rounded-md px-4 py-2 mb-2"
+                        />
+                        <button
+                          onClick={() =>
+                            handleEditProduct(
+                              product.id,
+                              productName,
+                              productDescription
+                            )
+                          }
+                          className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2"
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={() => setEditingProductId(null)}
+                          className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded"
+                        >
+                          Cancel
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <div className="mb-2">{product.name}</div>
+                        <div className="mb-2">{product.description}</div>
+                        <button
+                          onClick={() => {
+                            setEditingProductId(product.id);
+                            setProductName(product.name);
+                            setProductDescription(product.description);
+                          }}
+                          className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded mr-2"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteProduct(product.id)}
+                          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+                        >
+                          Delete
+                        </button>
+                      </>
+                    )}
+                  </li>
+                ))
+              ) : (
+                <div>No Products Found</div>
+              )}
             </ul>
           </div>
         </>
