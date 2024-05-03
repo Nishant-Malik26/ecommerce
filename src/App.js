@@ -1,8 +1,7 @@
 // import './App.css';
-import {BrowserRouter as Router,Link ,Route, Routes, Outlet, redirect} from 'react-router-dom'
+import {BrowserRouter as Router,Link ,Route, Routes, redirect} from 'react-router-dom'
 import { Signup } from './components/Signup';
 import { Signin } from './components/Signin';
-import { Products } from './components/Products';
 import AdminPanel from './components/Admin';
 import MainComponent from './components/MainPage';
 import { auth } from './utils/Firebase';
@@ -11,7 +10,8 @@ import { signOut } from 'firebase/auth';
 
 function App() {
   const [user, setUser] = useState(null);
-  console.log("🚀 ~ App ~ user:", user)
+  
+  // Handling Logout 
   const handleLogOut = async () => {
     try {
     await signOut(auth, user)
@@ -25,7 +25,7 @@ function App() {
     }
   }
 
-  
+  // Routes and Links of the application conditionally hidden and shown as per convention
   return (
     <Router>
       <div>
@@ -34,9 +34,9 @@ function App() {
           <li> <div className="text-orange-400 font-bold">WebWise</div></li>
           {!localStorage.getItem('user') &&   <li><Link to="/signup" className="text-white">Sign Up</Link></li>}
           {!localStorage.getItem('user') &&  <li><Link to="/login" className="text-white">Sign In</Link></li>}
-            {localStorage.getItem('user') &&   <li><Link to="/" className="text-white">Products</Link></li>}
+          {localStorage.getItem('user') &&   <li><Link to="/" className="text-white">Products</Link></li>}
           </ul>
-            {localStorage.getItem('user') && <button onClick={handleLogOut} className="text-white mr-3">Log Out</button>}
+          {localStorage.getItem('user') && <button onClick={handleLogOut} className="text-white mr-3">Log Out</button>}
         </nav>
         <Routes>
           <Route path="/" element={<MainComponent user={user} setUser={setUser} />} />

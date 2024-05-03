@@ -5,10 +5,12 @@ import { collection, getDocs } from "firebase/firestore";
 export const Products = () => {
   const [products, setProducts] = useState([]);
 
+  //Getting all products 
+  // Could have used this same component for CRUD operations in Admin component
+  //  but for maintaning different design for just view did it with this component
   const getAllProducts = async () => {
     try {
       const productsData = [];
-
       const querySnapshot = await getDocs(collection(db, "products"));
       querySnapshot.forEach((doc) => {
         productsData.push(doc.data());

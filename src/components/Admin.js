@@ -2,21 +2,14 @@ import React, { useState, useEffect } from "react";
 
 import {
   collection,
-  getDoc,
   setDoc,
   getDocs,
-  query,
-  where,
   addDoc,
-  updateDoc,
-  DocumentReference,
   doc,
   deleteDoc,
 } from "firebase/firestore";
-import { v4 as uuid } from 'uuid';
 
 import { db } from "../utils/Firebase";
-import { useNavigate } from "react-router-dom";
 
 const AdminPanel = ({ user }) => {
   const [loading, setLoading] = useState(true);
@@ -27,16 +20,15 @@ const AdminPanel = ({ user }) => {
   const [productDescription, setProductDescription] = useState("");
   const [newProductDescription, setNewProductDescription] = useState("");
   const [editingProductId, setEditingProductId] = useState(null);
-    // const [documentId , setDocumentId] = useState('')
-  const navigate = useNavigate();
 
   const getAllProducts = async () => {
     try {
-
+      //Getting all products from Firebase
       const querySnapshot = await getDocs(collection(db, "products"));
-      setProducts(querySnapshot.docs.map((doc) => ({...doc.data(),id : doc.id})));
-  console.log(user)
-
+      // Setting it in our local state so can be used later for edit or delete
+      setProducts(
+        querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      );
     } catch (error) {
       console.log("🚀 ~ getAllProducts ~ error:", error);
     }
@@ -51,6 +43,7 @@ const AdminPanel = ({ user }) => {
   const handleAddProduct = async (e) => {
     e.preventDefault();
     try {
+      //Adding product (No condition for duplicate was given so duplicate can be added)
       await addDoc(collection(db, "products"), {
         name: newProductName,
         description: newProductDescription,
@@ -59,62 +52,48 @@ const AdminPanel = ({ user }) => {
       setNewProductDescription("");
       getAllProducts();
     } catch (error) {
-      console.log("🚀 ~ handleAddProduct ~ error:", error)
+      console.log("🚀 ~ handleAddProduct ~ error:", error);
     }
   };
 
   const handleEditProduct = async (productId, newName, newDescription) => {
 
-  
     try {
-          await setDoc(doc(db, 'products',productId), {
-            id : productId,
-            name: newName,
-            description: newDescription,
-          });
-  
+      //Editing Product
+      await setDoc(doc(db, "products", productId), {
+        id: productId,
+        name: newName,
+        description: newDescription,
+      });
 
-        setEditingProductId(null);
+      setEditingProductId(null);
       getAllProducts();
-
-    
-        
-    
-  
-
-      
     } catch (error) {
-    console.log("🚀 ~ handleEditProduct ~ error:", error)
+      console.log("🚀 ~ handleEditProduct ~ error:", error);
     }
   };
 
   const handleDeleteProduct = async (productId) => {
     try {
-        await deleteDoc(doc(db, 'products',productId));
-        getAllProducts();
+      //Deleting Product
+      await deleteDoc(doc(db, "products", productId));
+      getAllProducts();
 
       setEditingProductId(null);
-    getAllProducts();
-
-  
-      
-  
-
-
-    
-  } catch (error) {
-    console.error("Error editing product: ", error);
-  }
+      getAllProducts();
+    } catch (error) {
+      console.error("Error editing product: ", error);
+    }
   };
   if (loading) {
-    console.log("🚀 ~ AdminPanel ~ loading:", user)
+    // initially loading
     return <div>Loading...</div>;
   }
-
+// Showing text to sign in to use this route
+//basic form is there 
   return (
     <>
-      { localStorage.getItem("user")
- ? (
+      {localStorage.getItem("user") ? (
         <>
           <div className="container mx-auto p-8">
             <h1 className="text-3xl font-bold mb-8">Admin Panel</h1>
